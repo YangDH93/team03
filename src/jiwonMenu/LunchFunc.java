@@ -5,7 +5,7 @@ import java.util.*;
 public class LunchFunc {
 	
 	Scanner sc = new Scanner(System.in);
-	ArrayList<String> arr = null;
+	ArrayList<String> arr = new ArrayList<String>();
 	private String menu;
 	
 	public String getMenu() {
@@ -17,13 +17,12 @@ public class LunchFunc {
 	
 	public void display() {
 		int num;
-		System.out.print("=====점심룰렛=====\n번호를 선택하세요."
-				+ "\n1. 점심메뉴 등록\n2. 돌려돌려 점심판\n3.나가기\n>>> ");
-		num=sc.nextInt();
-		
 		while(true) {
+			System.out.print("=====점심룰렛====="
+					+ "\n1. 점심메뉴 등록\n2. 돌려돌려 점심판\n3. 나가기\n>>> ");
+			num=sc.nextInt();
 			try {
-				if(num==1) Num1Put();
+				if(num==1) Num1Ck();
 				else if(num==2) Num2Ran();
 				else if(num==3) {
 					System.out.println("처음화면으로 돌아갑니다.");
@@ -41,50 +40,81 @@ public class LunchFunc {
 			}
 		}//while
 	}//display
-	
-	public void Num1Put() {
-		System.out.println("점심메뉴를 등록하세요.(최소 2개)");
-		for(int i=1; ;i++) {
-			System.out.print("메뉴"+i+" : ");
-			String menu;
-			menu = sc.next();
-			setMenu(menu);
-			Num1Arr(menu);
-			if(i>2) {
-				int re=Num1MorePut();
-				if(re==0) {Num1Arr(menu); continue;}
-				else if(re==1) break;
-				else System.out.print("1 or 2만 선택하세요.");
+
+	public void Num1Ck() {
+		
+		while(true) {
+			System.out.print("- - - - - - - -"
+					+ "\n1.등록메뉴 확인\n2.메뉴 등록\n3.나가기\n>>> ");
+			try {
+				int choice=sc.nextInt();
+				if(choice==1) {Num1Cho1();}
+				else if(choice==2) Num1Cho2();
+				else if(choice==3) break;
+				else {
+					throw new Exception("1~3까지만 입력하시오.");
+					//오류메시지
+				}
+			} catch (InputMismatchException e) {
+				System.err.println("숫자만 입력하시오.");
+				sc.nextLine();
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+				sc.nextLine();
 			}
 		}
 	}//num1
-	
-	public void Num1Arr(String menu) {
-		arr = new ArrayList<String>();
-		if(arr.contains(menu)) {
-			System.out.println("있는 메뉴입니다. 다시 입력하세요.");
+	public void Num1Cho1() {
+		if(arr.size()==0) {
+			System.out.println("등록된 메뉴가 없습니다.");
+			return; //continue대체
 		}else {
-			arr.add(getMenu());
+			for(String s : arr) {
+				System.out.println(s);
+			}
+		}
+	}
+
+	public void Num1Cho2() {
+		System.out.println("- - - - - - - -\n점심메뉴를 등록하세요.");
+		if(arr.size()<1) System.out.println("(2개 이상)");
+		while(true) {
+			System.out.print("메뉴 : ");
+			String menu=sc.next();
+			setMenu(menu);
+			int re01=Num1Arr(getMenu());
+			if(re01==0) continue;
+			if(arr.size()>=2) {
+				System.out.println("- - - - - - - -\n더 등록하시겠습니까?"
+						+ "\n1.네 2.아니오(나가기)");
+				int more=sc.nextInt();
+				if(more==1) continue;
+				else if(more==2) break;
+			}
+		}
+	}//num1-choice1
+	
+	public int Num1Arr(String menu) {
+		if(arr.contains(menu)) {
+			System.out.println("- - - - - - - -\n"
+					+ "있는 메뉴입니다. 다시 입력하세요.");
+			return 0;
+		}else {
+			arr.add(menu);
+			return -1;
 		}
 	}//num1 Arr
 	
-	public int Num1MorePut() {
-		System.out.print("더 등록하시겠습니까?\n1.네\n2.아니오\n>>> ");
-		try {
-			int choice=sc.nextInt();
-			if(choice==1) return 0;
-			else if(choice==2) return 1;
-			else return 2;
-		} catch (InputMismatchException e) {
-			System.err.println("숫자만 입력하시오.");
-			sc.nextLine();
-		}
-		return -1;//??머임?
-	}//num1 추가
-	
 	public void Num2Ran() {
 		int ran=(int)Math.random()*(arr.size());
-		System.out.println("오늘의 메뉴 : "+arr.get(ran));
-	}
+		System.out.println("오늘의 메뉴는?");
+		for(int i=0; i<3; i++) {
+			System.out.println(".");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
+		}
+		System.out.println("***"+arr.get(ran)+"***\n");
+	}//random
 	
 }
