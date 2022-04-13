@@ -106,9 +106,10 @@ public class LunchFunc {
 	}//num1 Arr
 	
 	public void Num2Ran() {
-		int ran=(int)Math.random()*(arr.size());
+		int ran=0;
 		System.out.println("오늘의 메뉴는?");
 		for(int i=0; i<3; i++) {
+			ran=(int)(Math.random()*(arr.size()));
 			System.out.println(".");
 			try {
 				Thread.sleep(1000);
